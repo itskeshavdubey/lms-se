@@ -1,14 +1,16 @@
-import type { Config } from "tailwindcss"
+// Import the Config type from tailwindcss
+import type { Config } from "tailwindcss";
 
-const config = {
-  darkMode: ["class"],
+// Define your Tailwind CSS configuration
+const config: Config = {
+  darkMode: "class", // Enable dark mode with the "class" option
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
-  prefix: "",
+    './pages/**/*.{js,jsx,ts,tsx}', // Adjusted file extensions for Next.js compatibility
+    './components/**/*.{js,jsx,ts,tsx}',
+    './app/**/*.{js,jsx,ts,tsx}',
+    './src/**/*.{js,jsx,ts,tsx}',
+  ],
+  prefix: "", // No prefix for Tailwind classes
   theme: {
     container: {
       center: true,
@@ -19,6 +21,7 @@ const config = {
     },
     extend: {
       colors: {
+        // Custom color definitions using CSS variables
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -74,7 +77,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config
+  plugins: [require("tailwindcss-animate")], // Import the tailwindcss-animate plugin
+};
 
-export default config
+export default config;
