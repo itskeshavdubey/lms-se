@@ -13,35 +13,34 @@ import {
 } from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Course } from "@prisma/client";
+import Image from "next/image";
+import { FileUpload } from "@/components/file-upload";
 
-interface DescriptionFormProps {
+interface ImageFormProps {
   initialData: Course;
   courseId: string;
 }
 const formSchema = z.object({
-  description: z.string().min(1, {
-    message: "Description is required",
+  imageUrl: z.string().min(1, {
+    message: "Image is required",
   }),
 });
 
-export const DescriptionForm = ({
-  initialData,
-  courseId,
-}: DescriptionFormProps) => {
+export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => setIsEditing((current) => !current);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: initialData?.description || "",
+      imageUrl: initialData?.imageUrl || "",
     },
   });
 
@@ -60,56 +59,53 @@ export const DescriptionForm = ({
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course description
+        Course Image
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing && <>Cancel</>}
-          {!isEditing && (
+          {!isEditing && !initialData.imageUrl && (
+            <>
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Add an Image
+            </>
+          )}
+          {!isEditing && initialData.imageUrl && (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit description
+              Edit Image
             </>
           )}
         </Button>
       </div>
-      {!isEditing && (
-        <p
-          className={cn(
-            "text-sm mt-2",
-            !initialData.description && "text-slate-500 italic"
-          )}
-        >
-          {initialData.description || "No description"}
-        </p>
-      )}
+      {!isEditing &&
+        (!initialData.imageUrl ? (
+          <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
+            <ImageIcon className="h-10 w-10 text-slate-500" />
+          </div>
+        ) : (
+          <div className="relative aspect-video mt-2">
+            <Image
+              alt="Upload"
+              fill
+              className="object-cover rounded-md"
+              src={initialData.imageUrl}
+            />
+          </div>
+        ))}
 
       {isEditing && (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Textarea
-                      disabled={isSubmitting}
-                      placeholder="e.g. 'This course is about...'"
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <div className="flex items-centergap-x-2 mt-3">
-              <Button type="submit" disabled={!isValid || isSubmitting}>
-                Save
-              </Button>
-            </div>
-          </form>
-        </Form>
+        <div>
+          <FileUpload
+            endpoint="courseImage"
+            onChange={(url) => {
+              if (url) {
+                onSubmit({ imageUrl: url });
+              }
+            }}
+          />
+          <div className="text-xs text-muted-foreground mt-4">
+            16:9 aspect ration recommended
+          </div>
+        </div>
       )}
     </div>
   );

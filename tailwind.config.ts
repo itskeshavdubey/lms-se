@@ -1,14 +1,13 @@
-// Import the Config type from tailwindcss
-import type { Config } from "tailwindcss";
+const { withUt } = require("uploadthing/tw");
 
 // Define your Tailwind CSS configuration
-const config: Config = {
+module.exports = withUt({
   darkMode: "class", // Enable dark mode with the "class" option
   content: [
-    './pages/**/*.{js,jsx,ts,tsx}', // Adjusted file extensions for Next.js compatibility
-    './components/**/*.{js,jsx,ts,tsx}',
-    './app/**/*.{js,jsx,ts,tsx}',
-    './src/**/*.{js,jsx,ts,tsx}',
+    "./pages/**/*.{js,jsx,ts,tsx}", // Adjusted file extensions for Next.js compatibility
+    "./components/**/*.{js,jsx,ts,tsx}",
+    "./app/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
   prefix: "", // No prefix for Tailwind classes
   theme: {
@@ -76,11 +75,9 @@ const config: Config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily: {
-        inter: ['Inter', 'sans-serif'],
+        inter: ["Inter", "sans-serif"],
       },
     },
   },
   plugins: [require("tailwindcss-animate")], // Import the tailwindcss-animate plugin
-};
-
-export default config;
+});
