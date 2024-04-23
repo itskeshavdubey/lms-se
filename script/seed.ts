@@ -8,7 +8,7 @@ async function main() {
         { name: "Computer Science" },
         { name: "Music" },
         { name: "Fitness" },
-        { name: "Photography" }, // Corrected typo in "Photography"
+        { name: "Photography" },
         { name: "Accounting" },
         { name: "Law" },
         { name: "Economics" },
@@ -18,7 +18,7 @@ async function main() {
 
     console.log("Success");
   } catch (error) {
-    console.log("Error setting the database categories", error); // Corrected typo in "setting"
+    console.error("Error setting the database categories", error); // Corrected typo in "setting"
   } finally {
     await database.$disconnect();
   }
