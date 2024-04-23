@@ -1,15 +1,13 @@
-import { NextResponse } from "next/server";
+import Mux from "@mux/mux-node";
 import { auth } from "@clerk/nextjs";
+import { NextResponse } from "next/server";
+
 import { db } from "@/lib/db";
 
-import { Mux } from "@mux/mux-node";
-
-const mux = new Mux(
+const { Video } = new Mux(
   process.env.MUX_TOKEN_ID!,
   process.env.MUX_TOKEN_SECRET!,
 );
-
-const Video = mux.Video;
 
 export async function DELETE(
   req: Request,
@@ -51,7 +49,7 @@ export async function DELETE(
         }
       });
 
-      if (existingMuxData && Video && Video.Assets) {
+      if (existingMuxData) {
         await Video.Assets.del(existingMuxData.assetId);
         await db.muxData.delete({
           where: {
@@ -125,7 +123,7 @@ export async function PATCH(
       }
     });
 
-    if (values.videoUrl && Video && Video.Assets) {
+    if (values.videoUrl) {
       const existingMuxData = await db.muxData.findFirst({
         where: {
           chapterId: params.chapterId,
@@ -159,6 +157,6 @@ export async function PATCH(
     return NextResponse.json(chapter);
   } catch (error) {
     console.log("[COURSES_CHAPTER_ID]", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse("Internal Error", { status: 500 }); 
   }
 }
